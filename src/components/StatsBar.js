@@ -1,12 +1,8 @@
-import React from 'react';
-
-const BaseStats = ({})
-
 import styled from 'styled-components/native';
-import { Animated } from 'react-native';
+import {Animated} from 'react-native';
 
 type StatValueProps = {
-  width: number;
+  width: number,
 };
 
 export const Stat = styled.View`
@@ -27,13 +23,16 @@ export const StatLine = styled.View`
   flex: 1;
   overflow: hidden;
   height: 3px;
-  background: ${({ theme }) => theme.colors.lightGrey};
+  background: ${({theme}) => theme.colors.lightGrey};
   margin-left: 16px;
 `;
 
-export const StatValue = styled(Animated.View)<StatValueProps>`
+export const StatValue =
+  styled(Animated.View) <
+  StatValueProps >
+  `
   height: 3px;
-  background: ${({ theme, width }) =>
+  background: ${({theme, width}) =>
     width < 50 ? theme.colors.red : theme.colors.green};
-  width: ${props => props.width}%;
+  width: ${(props) => props.width}%;
 `;
