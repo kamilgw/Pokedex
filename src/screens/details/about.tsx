@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {colors} from '../../styles';
 import {ProgressBar} from 'react-native-paper';
-
+import Evolutions from './evolutions';
 const Details = (props) => {
   const [details, setDetails] = useState([]);
 
@@ -82,6 +82,7 @@ const Details = (props) => {
               );
             })}
           </View>
+          <Evolutions pokemonID={String(details.id)} />
         </Fragment>
       </View>
     </ScrollView>
@@ -114,7 +115,6 @@ const styles = StyleSheet.create({
     color: '#303943',
     lineHeight: 42,
     fontWeight: 'bold',
-    color: 'white',
   },
   info: {
     marginLeft: 15,

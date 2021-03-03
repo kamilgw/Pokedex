@@ -8,6 +8,8 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
+import Pokemon from '../../types/pokemon';
+import api from '../../services/api';
 
 const Pokemons = ({navigation}) => {
   const [pokemons, setPokemons] = useState([]);
@@ -17,12 +19,15 @@ const Pokemons = ({navigation}) => {
     fetchPokemons();
   }, []);
 
-  const fetchPokemons = () => {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=500')
-      .then((response) => response.json())
-      .then((pokemons) => setPokemons(pokemons.results));
+  const fetchPokemons = async () => {
+    try {
+      fetch('https://pokeapi.co/api/v2/pokemon?limit=500')
+        .then((response) => response.json())
+        .then((pokemons) => setPokemons(pokemons.results));
+    } catch (error) {
+      console.error(error);
+    }
   };
-
   return (
     <View>
       <View style={styles.searchCont}>

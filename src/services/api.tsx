@@ -1,7 +1,6 @@
-import Axios from 'axios';
-import Pokemon from '../types';
-const axios = Axios.create();
+import axios from 'axios';
 
-export default {
-    pokemonList: async (): Promise<Pokemon[]>
-}
+export default axios.create({
+  baseURL:
+    'https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json',
+});
