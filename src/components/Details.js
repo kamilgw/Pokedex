@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {colors} from '../styles';
 import {ProgressBar} from 'react-native-paper';
+
 const Details = props => {
   const [details, setDetails] = useState ([]);
 
@@ -48,20 +49,23 @@ const Details = props => {
           <Fragment>
             <Text style={styles.title}>About</Text>
             <Text style={styles.description}>
-              Something here 
+              <Text style={styles.description}>
+                Type: {details.types[0].type.name}{"\n"}
+                Ability: {details.abilities[0].ability.name}
+              </Text>
             </Text>
 
-              <View style={styles.viewHeightWeight}>
-                <View style={styles.dataHeightWeight}>
-                  <Text style={styles.titleHeightWeight}>Height</Text>
-                  <Text>{details.height}</Text>
-                </View>
-                <View style={styles.dataHeightWeight}>
-                  <Text style={styles.titleHeightWeight}>Weight</Text>
-                  <Text>{details.weight}</Text>
-                </View>
+            <View style={styles.viewHeightWeight}>
+              <View style={styles.dataHeightWeight}>
+                <Text style={styles.titleHeightWeight}>Height</Text>
+                <Text>{details.height}</Text>
               </View>
-
+              <View style={styles.dataHeightWeight}>
+                <Text style={styles.titleHeightWeight}>Weight</Text>
+                <Text>{details.weight}</Text>
+              </View>
+            </View>
+            <Text style={styles.title}>Stats</Text>
             <View style={{}}>
               {details.stats.map ((item, index) => {
                 return (
@@ -100,9 +104,7 @@ const styles = StyleSheet.create ({
     lineHeight: 42,
     fontWeight: 'bold',
   },
-  container: {
-    // height: "100%"
-  },
+  container: {},
   name: {
     fontSize: 30,
     color: '#303943',
