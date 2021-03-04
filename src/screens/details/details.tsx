@@ -1,4 +1,4 @@
-import React, {Fragment, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   SafeAreaView,
@@ -6,14 +6,15 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import {colors} from '../../styles';
-import {ProgressBar} from 'react-native-paper';
 import Evolutions from './evolutions';
+import About from './about';
 import Pokemon from '../../types/pokemons';
+import Tabbar from '../../components/tabBar';
+import TypeCard from '../../components/typeCard';
 
-const Details = (props) => {
+const Details = ({navigation}) => {
   const [details, setDetails] = useState([]);
 
   useEffect(() => {
@@ -21,16 +22,16 @@ const Details = (props) => {
   }, []);
 
   const fetchPokemonDetails = () => {
-    const {state} = props.navigation;
+    const {state} = navigation;
     fetch(`https://pokeapi.co/api/v2/pokemon/${state.params.pokemon}`)
       .then((res) => res.json())
       .then((details) => setDetails(details));
   };
 
-  const data = details as Pokemon;
-
+  const pokemonData = details as Pokemon;
+  const pokeball = require('../../assets/pokeball.png');
   return details.name ? (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView
         style={{
           ...styles.header,
@@ -38,6 +39,11 @@ const Details = (props) => {
         }}>
         <View style={styles.info}>
           <Text style={styles.name}>{details.name}</Text>
+          <Text style={styles.id}>#{String(details.id).padStart(3, '0')}</Text>
+          <View style={styles.types}>
+            {details.types.map((type, key) => console.log(type))}
+          </View>
+          <Text>{details.types[0].type.name}</Text>
           <View style={styles.teste}>
             <Image
               style={styles.image}
@@ -47,50 +53,25 @@ const Details = (props) => {
                 ).padStart(3, '0')}.png`,
               }}
             />
+            <Image style={styles.pokeballPos} source={pokeball} />
           </View>
         </View>
       </SafeAreaView>
-
-      <View style={styles.body}>
-        <Fragment>
-          <Text style={styles.title}>About</Text>
-          <Text style={styles.description}>
-            <Text style={styles.description}>
-              Type: {details.types[0].type.name}
-              {'\n'}
-              Ability: {details.abilities[0].ability.name}
-            </Text>
-          </Text>
-
-          <View style={styles.viewHeightWeight}>
-            <View style={styles.dataHeightWeight}>
-              <Text style={styles.titleHeightWeight}>Height</Text>
-              <Text>{details.height}</Text>
-            </View>
-            <View style={styles.dataHeightWeight}>
-              <Text style={styles.titleHeightWeight}>Weight</Text>
-              <Text>{details.weight}</Text>
-            </View>
-          </View>
-          <Text style={styles.title}>Stats</Text>
-          <View style={{}}>
-            {details.stats.map((item, index) => {
-              return (
-                <View key={index}>
-                  <Text>{item.stat.name}</Text>
-                  <ProgressBar
-                    style={{height: 20}}
-                    progress={parseInt(item.base_stat) / 100}
-                    color={colors[details.types[0].type.name]}
-                  />
-                </View>
-              );
-            })}
-          </View>
-          <Evolutions pokemonID={String(details.id)} />
-        </Fragment>
+      <View style={styles.main}>
+        <Tabbar
+          tabs={[
+            {
+              name: 'About',
+              component: <About pokemonData={pokemonData} />,
+            },
+            {
+              name: 'Evolutions',
+              component: <Evolutions pokemonID={pokemonData.id} />,
+            },
+          ]}
+        />
       </View>
-    </ScrollView>
+    </View>
   ) : (
     <View style={styles.indicator}>
       <ActivityIndicator size="large" color="#E63F34" />
@@ -104,17 +85,17 @@ const styles = StyleSheet.create({
   header: {
     height: 250,
   },
-  body: {
-    marginLeft: 15,
-    marginRight: 15,
+  container: {
+    flex: 1,
   },
-  title: {
-    fontSize: 20,
-    color: '#303943',
-    lineHeight: 42,
+  id: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  container: {},
+  types: {
+    flexDirection: 'row',
+  },
   name: {
     fontSize: 30,
     color: '#303943',
@@ -133,39 +114,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
   },
-  type: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    fontSize: 11,
-    color: 'white',
-    padding: 3,
-    borderRadius: 15,
-    marginRight: 5,
-    textAlign: 'center',
-    width: 50,
-  },
   teste: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  description: {
-    marginRight: 15,
-  },
-  card: {
-    flexDirection: 'row',
-  },
-  viewHeightWeight: {
-    flexDirection: 'row',
-  },
-  dataHeightWeight: {
+  main: {
     flex: 1,
-    alignItems: 'center',
-    marginBottom: 12,
-    marginTop: 12,
-    fontSize: 14,
+    backgroundColor: '#fff',
   },
-  titleHeightWeight: {
-    color: '#acb0b4',
-    marginBottom: 5,
+  pokeballPos: {
+    width: 245,
+    height: 245,
+    position: 'absolute',
+    zIndex: -1,
+    opacity: 0.07,
+    transform: [{rotate: '45deg'}],
   },
 });

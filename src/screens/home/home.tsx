@@ -61,7 +61,6 @@ const Pokemons = ({navigation}) => {
                     }}
                   />
                   <Text>{pokemon.name}</Text>
-                  <Text></Text>
                 </TouchableOpacity>
               );
             })}

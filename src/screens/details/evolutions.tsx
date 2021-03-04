@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   id: {
     color: '#747476',
-    marginTop: 10,
+    marginTop: 30,
   },
   name: {
     fontSize: 16,

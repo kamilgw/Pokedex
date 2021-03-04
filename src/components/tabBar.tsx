@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     height: 3,
     marginBottom: -3,
     backgroundColor: '#747476',
-    scaleX: 0.9,
+    transform: [{scaleX: 0.9}],
   },
   tabButton: {
     flex: 1,
