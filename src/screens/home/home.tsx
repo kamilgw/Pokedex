@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
+  SafeAreaView,
   Text,
   ScrollView,
   Image,
@@ -29,7 +30,7 @@ const Pokemons = ({navigation}) => {
     }
   };
   return (
-    <View>
+    <SafeAreaView>
       <View style={styles.searchCont}>
         <TextInput
           style={styles.searchfeild}
@@ -68,7 +69,7 @@ const Pokemons = ({navigation}) => {
             })}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

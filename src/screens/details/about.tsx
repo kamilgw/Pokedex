@@ -1,6 +1,7 @@
 import React, {Fragment, useState, useEffect} from 'react';
 import {
   View,
+  SafeAreaView,
   Text,
   Image,
   StyleSheet,
@@ -26,7 +27,7 @@ const Details = (props) => {
 
   return details.name ? (
     <ScrollView contentContainerStyle={styles.container}>
-      <View
+      <SafeAreaView
         style={{
           ...styles.header,
           backgroundColor: colors[details.types[0].type.name],
@@ -44,7 +45,7 @@ const Details = (props) => {
             />
           </View>
         </View>
-      </View>
+      </SafeAreaView>
 
       <View style={styles.body}>
         <Fragment>

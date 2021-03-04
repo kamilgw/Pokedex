@@ -50,7 +50,7 @@ const getIDFromUrl = (url: string): number => {
   return matches ? parseInt(matches[1]) || 0 : 0;
 };
 
-const Evolutions: React.FC<Props> = ({pokemonID}) => {
+const Evolutions = ({pokemonID}: Props) => {
   const [mounted, setMounted] = useState(true);
   const [evolutions, setEvolutions] = useState<Evolution[]>();
   const pokeball = require('../../assets/pokeball.png');
@@ -122,6 +122,7 @@ const Evolutions: React.FC<Props> = ({pokemonID}) => {
           {data.item_name && (
             <Text style={styles.detail}>({data.item_name})</Text>
           )}
+          <Image style={styles.pokeballPos} source={pokeball} />
         </View>
       ))}
     </View>
@@ -158,7 +159,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 12,
   },
-  pokeball: {
+  pokeballPos: {
     width: 150,
     height: 150,
     position: 'absolute',
