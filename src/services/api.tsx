@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export default axios.create({
-  baseURL:
-    'https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json',
+const api = axios.create({
+  baseURL: 'https://pokeapi.co/api/v2',
 });
+
+export default api;

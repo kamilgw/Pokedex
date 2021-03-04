@@ -9,7 +9,6 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import Pokemon from '../../types/pokemon';
 import api from '../../services/api';
 
 const Pokemons = ({navigation}) => {
@@ -22,9 +21,8 @@ const Pokemons = ({navigation}) => {
 
   const fetchPokemons = async () => {
     try {
-      fetch('https://pokeapi.co/api/v2/pokemon?limit=500')
-        .then((response) => response.json())
-        .then((pokemons) => setPokemons(pokemons.results));
+      const response = await api.get('/pokemon?limit=500');
+      setPokemons(response.data.results);
     } catch (error) {
       console.error(error);
     }
