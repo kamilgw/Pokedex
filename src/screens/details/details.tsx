@@ -3,15 +3,19 @@ import {
   View,
   SafeAreaView,
   Text,
-  Image,
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import 'react-native-gesture-handler';
+import FastImage from 'react-native-fast-image'
+
 import {colors} from '../../styles';
 import Evolutions from './evolutions';
 import About from './about';
 import Pokemon from '../../types/pokemons';
-import Tabbar from '../../components/tabBar';
+import TabBar from '../../components/tabBar';
 import TypeCard from '../../components/typeCard';
 
 const Details = ({navigation}) => {
@@ -30,6 +34,8 @@ const Details = ({navigation}) => {
 
   const pokemonData = details as Pokemon;
   const pokeball = require('../../assets/pokeball.png');
+  const Tab = createMaterialTopTabNavigator();
+
   return details.name ? (
     <View style={styles.container}>
       <SafeAreaView
@@ -41,11 +47,10 @@ const Details = ({navigation}) => {
           <Text style={styles.name}>{details.name}</Text>
           <Text style={styles.id}>#{String(details.id).padStart(3, '0')}</Text>
           <View style={styles.types}>
-            {details.types.map((type, key) => console.log(type))}
+              <TypeCard type={details.types[0].type.name} />
           </View>
-          <Text>{details.types[0].type.name}</Text>
           <View style={styles.teste}>
-            <Image
+            <FastImage
               style={styles.image}
               source={{
                 uri: `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${String(
@@ -53,23 +58,12 @@ const Details = ({navigation}) => {
                 ).padStart(3, '0')}.png`,
               }}
             />
-            <Image style={styles.pokeballPos} source={pokeball} />
+            <FastImage style={styles.pokeballPos} source={pokeball} />
           </View>
         </View>
       </SafeAreaView>
       <View style={styles.main}>
-        <Tabbar
-          tabs={[
-            {
-              name: 'About',
-              component: <About pokemonData={pokemonData} />,
-            },
-            {
-              name: 'Evolutions',
-              component: <Evolutions pokemonID={pokemonData.id} />,
-            },
-          ]}
-        />
+        <TabBar pokemonData={pokemonData} />
       </View>
     </View>
   ) : (
@@ -94,11 +88,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   types: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    marginTop: 5,
   },
   name: {
     fontSize: 30,
-    color: '#303943',
+    color: '#fff',
     lineHeight: 42,
     fontWeight: 'bold',
   },
@@ -109,10 +104,6 @@ const styles = StyleSheet.create({
   image: {
     height: 200,
     width: 200,
-  },
-  types: {
-    flexDirection: 'row',
-    marginTop: 5,
   },
   teste: {
     flex: 1,

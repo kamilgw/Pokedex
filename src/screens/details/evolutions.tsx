@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
+import FastImage from 'react-native-fast-image'
+import getIDFromUrl from '../../utilities/getIDFromUrl';
 
 interface SpecieData {
   evolution_chain: {
@@ -44,11 +46,6 @@ export interface Props {
   pokemonID: number;
 }
 
-const getIDFromUrl = (url: string): number => {
-  const re = /https:\/\/pokeapi\.co\/api\/v\d+\/[\w-]+\/(\d+)\/?/;
-  const matches = url.match(re);
-  return matches ? parseInt(matches[1]) || 0 : 0;
-};
 
 const Evolutions = ({pokemonID}: Props) => {
   const [mounted, setMounted] = useState(true);
@@ -105,7 +102,7 @@ const Evolutions = ({pokemonID}: Props) => {
     <View style={styles.container}>
       {evolutions?.map((data, index) => (
         <View style={styles.evolution} key={index}>
-          <Image
+          <FastImage
             style={styles.pokemon}
             source={{
               uri:
@@ -122,7 +119,7 @@ const Evolutions = ({pokemonID}: Props) => {
           {data.item_name && (
             <Text style={styles.detail}>({data.item_name})</Text>
           )}
-          <Image style={styles.pokeballPos} source={pokeball} />
+          <FastImage style={styles.pokeballPos} source={pokeball} />
         </View>
       ))}
     </View>
@@ -137,15 +134,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
   },
 
   evolution: {
     alignItems: 'center',
-    marginBottom: 35,
+    marginBottom: 15,
   },
   pokemon: {
-    width: 150,
-    height: 150,
+    width: 140,
+    height: 140,
   },
   id: {
     color: '#747476',

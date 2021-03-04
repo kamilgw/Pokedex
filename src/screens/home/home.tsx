@@ -10,6 +10,8 @@ import {
   TextInput,
 } from 'react-native';
 import api from '../../services/api';
+import FastImage from 'react-native-fast-image'
+import getIDFromUrl from '../../utilities/getIDFromUrl';
 
 const Pokemons = ({navigation}) => {
   const [pokemons, setPokemons] = useState([]);
@@ -54,10 +56,13 @@ const Pokemons = ({navigation}) => {
                       pokemon: pokemon.name,
                     })
                   }>
-                  <Image
+                  <FastImage
                     style={{width: 150, height: 150}}
                     source={{
-                      uri: `https://img.pokemondb.net/sprites/omega-ruby-alpha-sapphire/dex/normal/${pokemon.name}.png`,
+                      uri: 
+                      'https://raw.githubusercontent.com/' +
+                'PokeAPI/sprites/master/sprites/pokemon/' +
+                `other/official-artwork/${getIDFromUrl(pokemon.url)}.png`,
                     }}
                   />
                   <Text>{pokemon.name}</Text>

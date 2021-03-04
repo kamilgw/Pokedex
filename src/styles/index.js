@@ -1,4 +1,3 @@
-
 export const colors = {
   plant: '#72B357',
   fire: '#DC5E45',

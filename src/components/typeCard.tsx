@@ -8,7 +8,7 @@ export interface TypeCardProps {
 const TypeCard = ({type}: TypeCardProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.type}>Typ: {type}</Text>
+      <Text style={styles.type}>{type}</Text>
     </View>
   );
 };
@@ -17,13 +17,13 @@ export default TypeCard;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 3,
-    paddingBottom: 16,
+    paddingVertical: 3,
+    paddingHorizontal: 15,
     borderRadius: 50,
     alignSelf: 'flex-start',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   type: {
     color: '#fff',
