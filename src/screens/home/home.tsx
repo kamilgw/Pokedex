@@ -8,14 +8,23 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
+
+import PokemonCard from '../../components/pokemonCard';
 import api from '../../services/api';
-import FastImage from 'react-native-fast-image'
+import PokemonList from '../../types/pokemonList';
 import getIDFromUrl from '../../utilities/getIDFromUrl';
 
+const itemsPerPage = 40;
+
 const Pokemons = ({navigation}) => {
-  const [pokemons, setPokemons] = useState([]);
+  const [pokemons, setPokemons] = useState(null);
   const [searchfeild, setSearchfeild] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [itemsLoaded, setItemsLoaded] = useState(itemsPerPage);
 
   useEffect(() => {
     fetchPokemons();
@@ -23,54 +32,64 @@ const Pokemons = ({navigation}) => {
 
   const fetchPokemons = async () => {
     try {
-      const response = await api.get('/pokemon?limit=500');
+      const response = await api.get(
+        `/pokemon?offset=${0}&limit=${itemsPerPage}`,
+      );
       setPokemons(response.data.results);
     } catch (error) {
       console.error(error);
     }
   };
+
+  async function loadMorePokemons() {
+    if (loading) return;
+
+    setLoading(true);
+    const response = await api.get(
+      `/pokemon?offset=${itemsLoaded}&limit=${itemsPerPage}`,
+    );
+
+    setPokemons([...pokemons, ...response.data.results]);
+    console.log(itemsLoaded);
+    setItemsLoaded(parseInt(itemsLoaded + itemsPerPage));
+    setLoading(false);
+  }
+
+  const renderFooter = () => {
+    return (
+      <View style={styles.footer}>
+        <ActivityIndicator />
+      </View>
+    );
+  };
+
   return (
-    <SafeAreaView>
-      <View style={styles.searchCont}>
+    <SafeAreaView style={styles.container}>
+    {/* <View style={styles.searchCont}>
         <TextInput
           style={styles.searchfeild}
           placeholder="Search Pokemons"
           onChangeText={(value) => setSearchfeild(value)}
           value={searchfeild}
         />
+      </View> */}
+      <View style={styles.pokemonList}>
+        <FlatList
+          data={pokemons}
+          numColumns={2}
+          onEndReached={() => loadMorePokemons()}
+          onEndReachedThreshold={0}
+          keyExtractor={(item) => item.name}
+          ListFooterComponent={renderFooter()}
+          renderItem={({item}) => (
+            <PokemonCard
+              navigation={navigation}
+              name={item.name}
+              url={item.url}
+            />
+          )}
+        />
       </View>
-      <ScrollView>
-        <View style={styles.container}>
-          {pokemons
-            .filter((pokemon) =>
-              pokemon.name.toLowerCase().includes(searchfeild.toLowerCase()),
-            )
-            .map((pokemon, index) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  key={index}
-                  style={styles.card}
-                  onPress={() =>
-                    navigation.navigate('Details', {
-                      pokemon: pokemon.name,
-                    })
-                  }>
-                  <FastImage
-                    style={{width: 150, height: 150}}
-                    source={{
-                      uri: 
-                      'https://raw.githubusercontent.com/' +
-                'PokeAPI/sprites/master/sprites/pokemon/' +
-                `other/official-artwork/${getIDFromUrl(pokemon.url)}.png`,
-                    }}
-                  />
-                  <Text>{pokemon.name}</Text>
-                </TouchableOpacity>
-              );
-            })}
-        </View>
-      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -79,11 +98,12 @@ export default Pokemons;
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flex: 1,
+  },
+  pokemonList: {
+    flex: 1,
     justifyContent: 'center',
-    marginTop: 45,
+    alignItems: 'center',
   },
   card: {
     display: 'flex',
@@ -108,5 +128,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: 250,
     borderRadius: 50,
+  },
+  footer: {
+    height: 40,
   },
 });
