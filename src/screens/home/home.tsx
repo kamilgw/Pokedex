@@ -81,7 +81,6 @@ const Pokemons = ({navigation}) => {
     );
   };
 
-  const scrollY = new Animated.
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.pokemonList}>
