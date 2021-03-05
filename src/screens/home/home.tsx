@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
   View,
   SafeAreaView,
@@ -21,8 +21,8 @@ import getIDFromUrl from '../../utilities/getIDFromUrl';
 const itemsPerPage = 40;
 
 const Pokemons = ({navigation}) => {
-  const [pokemons, setPokemons] = useState(null);
-  const [searchfeild, setSearchfeild] = useState('');
+  const [pokemons, setPokemons] = useState([]);
+  const [searchField, setSearchField] = useState('');
   const [loading, setLoading] = useState(false);
   const [itemsLoaded, setItemsLoaded] = useState(itemsPerPage);
 
@@ -30,7 +30,7 @@ const Pokemons = ({navigation}) => {
     fetchPokemons();
   }, []);
 
-  const fetchPokemons = async () => {
+  const fetchPokemons = useCallback(async () => {
     try {
       const response = await api.get(
         `/pokemon?offset=${0}&limit=${itemsPerPage}`,
@@ -39,9 +39,9 @@ const Pokemons = ({navigation}) => {
     } catch (error) {
       console.error(error);
     }
-  };
+  });
 
-  async function loadMorePokemons() {
+  const loadMorePokemons = async (shouldRefresh = false) => {
     if (loading) return;
 
     setLoading(true);
@@ -49,11 +49,29 @@ const Pokemons = ({navigation}) => {
       `/pokemon?offset=${itemsLoaded}&limit=${itemsPerPage}`,
     );
 
-    setPokemons([...pokemons, ...response.data.results]);
-    console.log(itemsLoaded);
+    setPokemons(shouldRefresh ? data : [...pokemons, ...response.data.results]);
     setItemsLoaded(parseInt(itemsLoaded + itemsPerPage));
     setLoading(false);
-  }
+  };
+
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerBox}>
+        <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
+          clearButtonMode="always"
+          value={searchField}
+          // onChangeText={(queryText) => handleSearch(queryText)}
+          placeholder="Search"
+          style={styles.headerText}
+        />
+      </View>
+    );
+  };
+
+  const handleSearch = (text) => {
+  };
 
   const renderFooter = () => {
     return (
@@ -63,16 +81,9 @@ const Pokemons = ({navigation}) => {
     );
   };
 
+  const scrollY = new Animated.
   return (
     <SafeAreaView style={styles.container}>
-    {/* <View style={styles.searchCont}>
-        <TextInput
-          style={styles.searchfeild}
-          placeholder="Search Pokemons"
-          onChangeText={(value) => setSearchfeild(value)}
-          value={searchfeild}
-        />
-      </View> */}
       <View style={styles.pokemonList}>
         <FlatList
           data={pokemons}
@@ -80,6 +91,10 @@ const Pokemons = ({navigation}) => {
           onEndReached={() => loadMorePokemons()}
           onEndReachedThreshold={0}
           keyExtractor={(item) => item.name}
+          onScroll = {(e)=>{
+            e.nativeEvent.contentOffset.y
+          }}
+          ListHeaderComponent={renderHeader}
           ListFooterComponent={renderFooter()}
           renderItem={({item}) => (
             <PokemonCard
@@ -114,20 +129,22 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
   },
+  headerBox: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 20,
+  },
+  headerText: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+  },
   searchCont: {
     position: 'absolute',
     marginBottom: 70,
     left: '20%',
     zIndex: 1,
     marginTop: 10,
-  },
-  searchfeild: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#000',
-    textAlign: 'center',
-    width: 250,
-    borderRadius: 50,
   },
   footer: {
     height: 40,
