@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   SafeAreaView,
@@ -10,7 +10,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image'
-
+import api from '../../services/api';
 import {colors} from '../../styles';
 import Evolutions from './evolutions';
 import About from './about';
@@ -31,6 +31,16 @@ const Details = ({navigation}) => {
       .then((res) => res.json())
       .then((details) => setDetails(details));
   };
+
+  // const fetchPokemonDetails = async () => {
+  //   try {
+  //     const {state} = navigation;
+  //     const response = await api.get(`/pokemon/${state.params.pokemon}`);
+  //     setDetails(response.data.results);
+  //   } catch (error) {
+  //     console.log(error);
+  //   };
+  // };
 
   const pokemonData = details as Pokemon;
   const pokeball = require('../../assets/pokeball.png');

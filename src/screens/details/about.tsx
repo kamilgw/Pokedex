@@ -22,11 +22,11 @@ const About = ({pokemonData}: Props) => {
       <View style={styles.viewHeightWeight}>
         <View style={styles.dataHeightWeight}>
           <Text style={styles.titleHeightWeight}>Height</Text>
-          <Text>{pokemonData.height}</Text>
+          <Text>{pokemonData.height/10}m</Text>
         </View>
         <View style={styles.dataHeightWeight}>
           <Text style={styles.titleHeightWeight}>Weight</Text>
-          <Text>{pokemonData.weight}</Text>
+          <Text>{pokemonData.weight/10}kg</Text>
         </View>
       </View>
       <Text style={styles.title}>Stats</Text>

@@ -70,8 +70,6 @@ const Pokemons = ({navigation}) => {
     );
   };
 
-  const handleSearch = (text) => {
-  };
 
   const renderFooter = () => {
     return (
