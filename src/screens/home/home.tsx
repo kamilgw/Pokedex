@@ -1,58 +1,40 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   SafeAreaView,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
   StyleSheet,
   TextInput,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {useNavigation} from '@react-navigation/native';
+import {RectButton} from 'react-native-gesture-handler';
+import {usePokemon} from '../../contexts';
 
 import PokemonCard from '../../components/pokemonCard';
-import api from '../../services/api';
-import PokemonList from '../../types/pokemonList';
-import getIDFromUrl from '../../utilities/getIDFromUrl';
 
-const itemsPerPage = 40;
+const Pokemons = () => {
+  const {pokemons, listPokemon, listPokemonById} = usePokemon();
+  const [refreshing] = useState(false);
+  const {navigate} = useNavigation();
+  const [offset, setOffset] = useState(0);
 
-const Pokemons = ({navigation}) => {
-  const [pokemons, setPokemons] = useState([]);
-  const [searchField, setSearchField] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [itemsLoaded, setItemsLoaded] = useState(itemsPerPage);
+  async function goToPageShow(id) {
+    await listPokemonById(id);
+    navigate('Details');
+  }
+
+  function loadMore() {
+    setOffset(offset + 14);
+  }
+
+  function refreshPokemons() {
+    setOffset(0);
+  }
 
   useEffect(() => {
-    fetchPokemons();
-  }, []);
-
-  const fetchPokemons = useCallback(async () => {
-    try {
-      const response = await api.get(
-        `/pokemon?offset=${0}&limit=${itemsPerPage}`,
-      );
-      setPokemons(response.data.results);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  const loadMorePokemons = async (shouldRefresh = false) => {
-    if (loading) return;
-
-    setLoading(true);
-    const response = await api.get(
-      `/pokemon?offset=${itemsLoaded}&limit=${itemsPerPage}`,
-    );
-
-    setPokemons(shouldRefresh ? data : [...pokemons, ...response.data.results]);
-    setItemsLoaded(parseInt(itemsLoaded + itemsPerPage));
-    setLoading(false);
-  };
+    listPokemon({offset});
+  }, [offset]);
 
   const renderHeader = () => {
     return (
@@ -61,7 +43,7 @@ const Pokemons = ({navigation}) => {
           autoCapitalize="none"
           autoCorrect={false}
           clearButtonMode="always"
-          value={searchField}
+          value={handleSearch}
           // onChangeText={(queryText) => handleSearch(queryText)}
           placeholder="Search"
           style={styles.headerText}
@@ -70,6 +52,7 @@ const Pokemons = ({navigation}) => {
     );
   };
 
+  const handleSearch = (text) => {};
 
   const renderFooter = () => {
     return (
@@ -85,21 +68,19 @@ const Pokemons = ({navigation}) => {
         <FlatList
           data={pokemons}
           numColumns={2}
-          onEndReached={() => loadMorePokemons()}
-          onEndReachedThreshold={0}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.1}
           keyExtractor={(item) => item.name}
-          onScroll = {(e)=>{
-            e.nativeEvent.contentOffset.y
-          }}
-          ListHeaderComponent={renderHeader}
-          ListFooterComponent={renderFooter()}
           renderItem={({item}) => (
-            <PokemonCard
-              navigation={navigation}
-              name={item.name}
-              url={item.url}
-            />
+            <RectButton onPress={() => goToPageShow(item.id)}>
+              <PokemonCard pokemon={item} />
+            </RectButton>
           )}
+          refreshing={refreshing}
+          onRefresh={refreshPokemons}
+          ListFooterComponent={renderFooter()}
+          showsVerticalScrollIndicator={false}
+
         />
       </View>
     </SafeAreaView>
@@ -123,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     marginVertical: 10,
   },
   headerBox: {
