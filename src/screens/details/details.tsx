@@ -1,70 +1,62 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React from 'react';
 import {
   View,
   SafeAreaView,
   Text,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import 'react-native-gesture-handler';
-import FastImage from 'react-native-fast-image'
-import api from '../../services/api';
-import {colors} from '../../styles';
-import Evolutions from './evolutions';
-import About from './about';
-import Pokemon from '../../types/pokemons';
+import FastImage from 'react-native-fast-image';
 import TabBar from '../../components/tabBar';
 import TypeCard from '../../components/typeCard';
+import {usePokemon, useMark} from '../../contexts';
+import {useNavigation} from '@react-navigation/native';
+import getColorFromType from '../../utilities/getColorFromType';
+import capitalizeFirstLetter from '../../utilities/capitalizeFirstLetter';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Details = ({navigation}) => {
-  const [details, setDetails] = useState([]);
+const Details = () => {
+  const {goBack} = useNavigation();
+  const {showMark} = useMark();
+  const {pokemon, markedAs} = usePokemon();
 
-  useEffect(() => {
-    fetchPokemonDetails();
-  }, []);
-
-  const fetchPokemonDetails = () => {
-    const {state} = navigation;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${state.params.pokemon}`)
-      .then((res) => res.json())
-      .then((details) => setDetails(details));
-  };
-
-  // const fetchPokemonDetails = async () => {
-  //   try {
-  //     const {state} = navigation;
-  //     const response = await api.get(`/pokemon/${state.params.pokemon}`);
-  //     setDetails(response.data.results);
-  //   } catch (error) {
-  //     console.log(error);
-  //   };
-  // };
-
-  const pokemonData = details as Pokemon;
   const pokeball = require('../../assets/pokeball.png');
   const Tab = createMaterialTopTabNavigator();
 
-  return details.name ? (
+  return pokemon.name ? (
     <View style={styles.container}>
       <SafeAreaView
         style={{
           ...styles.header,
-          backgroundColor: colors[details.types[0].type.name],
+          backgroundColor: getColorFromType(
+            capitalizeFirstLetter(pokemon.type),
+          ),
         }}>
+        <View style={styles.headerShow}>
+          <TouchableOpacity style={styles.backContainer} onPress={goBack}>
+            <Icon name="arrow-left" size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.heartContainer} onPress={showMark}>
+            <View style={styles.heartIconContainer}>
+              <Icon name="heart-outline" size={30} color="white" />
+            </View>
+          </TouchableOpacity>
+        </View>
         <View style={styles.info}>
-          <Text style={styles.name}>{details.name}</Text>
-          <Text style={styles.id}>#{String(details.id).padStart(3, '0')}</Text>
+          <Text style={styles.name}>{pokemon.name}</Text>
+          <Text style={styles.id}>#{String(pokemon.id).padStart(3, '0')}</Text>
           <View style={styles.types}>
-              <TypeCard type={details.types[0].type.name} />
+            <TypeCard type={pokemon.type} />
           </View>
           <View style={styles.teste}>
             <FastImage
               style={styles.image}
               source={{
                 uri: `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${String(
-                  details.id,
+                  pokemon.id,
                 ).padStart(3, '0')}.png`,
               }}
             />
@@ -73,7 +65,7 @@ const Details = ({navigation}) => {
         </View>
       </SafeAreaView>
       <View style={styles.main}>
-        <TabBar pokemonData={pokemonData} />
+        <TabBar pokemonData={pokemon} />
       </View>
     </View>
   ) : (
@@ -86,8 +78,25 @@ const Details = ({navigation}) => {
 export default Details;
 
 const styles = StyleSheet.create({
+  headerShow: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginLeft: 15,
+  },
   header: {
-    height: 250,
+    height: 400,
+  },
+  heartContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: '100%',
+  },
+  heartIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginRight: 20,
   },
   container: {
     flex: 1,
@@ -99,7 +108,9 @@ const styles = StyleSheet.create({
   },
   types: {
     flexDirection: 'column',
-    marginTop: 5,
+  },
+  backContainer: {
+    height: '100%',
   },
   name: {
     fontSize: 30,
@@ -112,12 +123,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   image: {
-    height: 200,
-    width: 200,
+    height: 220,
+    width: 220,
   },
   teste: {
     flex: 1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   main: {
@@ -125,11 +135,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   pokeballPos: {
-    width: 245,
-    height: 245,
+    width: 200,
+    height: 200,
     position: 'absolute',
     zIndex: -1,
     opacity: 0.07,
-    transform: [{rotate: '45deg'}],
   },
 });

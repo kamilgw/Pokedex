@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import FastImage from 'react-native-fast-image'
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import getIDFromUrl from '../../utilities/getIDFromUrl';
 
 interface SpecieData {
@@ -45,7 +45,6 @@ interface Evolution {
 export interface Props {
   pokemonID: number;
 }
-
 
 const Evolutions = ({pokemonID}: Props) => {
   const [mounted, setMounted] = useState(true);
@@ -99,30 +98,32 @@ const Evolutions = ({pokemonID}: Props) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {evolutions?.map((data, index) => (
-        <View style={styles.evolution} key={index}>
-          <FastImage
-            style={styles.pokemon}
-            source={{
-              uri:
-                'https://raw.githubusercontent.com/' +
-                'PokeAPI/sprites/master/sprites/pokemon/' +
-                `other/official-artwork/${data.id}.png`,
-            }}
-          />
-          <Text style={styles.id}>#{String(data.id).padStart(3, '0')}</Text>
-          <Text style={styles.name}>{data.species_name}</Text>
-          {data.min_level && (
-            <Text style={styles.detail}>(Level {data.min_level})</Text>
-          )}
-          {data.item_name && (
-            <Text style={styles.detail}>({data.item_name})</Text>
-          )}
-          <FastImage style={styles.pokeballPos} source={pokeball} />
-        </View>
-      ))}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {evolutions?.map((data, index) => (
+          <View style={styles.evolution} key={index}>
+            <FastImage
+              style={styles.pokemon}
+              source={{
+                uri:
+                  'https://raw.githubusercontent.com/' +
+                  'PokeAPI/sprites/master/sprites/pokemon/' +
+                  `other/official-artwork/${data.id}.png`,
+              }}
+            />
+            <Text style={styles.id}>#{String(data.id).padStart(3, '0')}</Text>
+            <Text style={styles.name}>{data.species_name}</Text>
+            {data.min_level && (
+              <Text style={styles.detail}>(Level {data.min_level})</Text>
+            )}
+            {data.item_name && (
+              <Text style={styles.detail}>({data.item_name})</Text>
+            )}
+            <FastImage style={styles.pokeballPos} source={pokeball} />
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 

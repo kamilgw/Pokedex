@@ -1,17 +1,19 @@
 import React from 'react';
 import Pokemon from '../../types/pokemon';
-import {View, Text, StyleSheet} from 'react-native';
-import {colors} from '../../styles';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
+import getColorFromType from '../../utilities/getColorFromType';
+import capitalizeFirstLetter from '../../utilities/capitalizeFirstLetter';
 
 export interface Props {
   pokemonData: Pokemon;
 }
 
-const About = ({pokemonData}: Props) => {
+const About = ({pokemonData}) => {
   return (
-    <View style={styles.container}>
-      {/* <Text style={styles.description}>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <Text style={styles.description}>
           <Text style={styles.description}>
             Type: {pokemonData.types[0].type.name}
             {'\n'}
@@ -19,32 +21,57 @@ const About = ({pokemonData}: Props) => {
           </Text>
         </Text> */}
 
-      <View style={styles.viewHeightWeight}>
-        <View style={styles.dataHeightWeight}>
-          <Text style={styles.titleHeightWeight}>Height</Text>
-          <Text>{pokemonData.height/10}m</Text>
+        <View style={styles.viewHeightWeight}>
+          <View style={styles.dataHeightWeight}>
+            <Text style={styles.titleHeightWeight}>Height</Text>
+            <Text>{pokemonData.height / 10}m</Text>
+          </View>
+          <View style={styles.dataHeightWeight}>
+            <Text style={styles.titleHeightWeight}>Weight</Text>
+            <Text>{pokemonData.weight / 10}kg</Text>
+          </View>
         </View>
-        <View style={styles.dataHeightWeight}>
-          <Text style={styles.titleHeightWeight}>Weight</Text>
-          <Text>{pokemonData.weight/10}kg</Text>
+        <Text style={styles.title}>Stats</Text>
+        <View style={{}}>
+          <Text>Hp</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.hp / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
+          <Text>Attack</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.attack / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
+          <Text>Defense</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.defense / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
+          <Text>Special-attack</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.specialAttack / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
+          <Text>Special-defense</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.specialDefense / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
+          <Text>Speed</Text>
+          <ProgressBar
+            style={{height: 20}}
+            progress={pokemonData?.stats?.speed / 100}
+            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
+          />
         </View>
       </View>
-      <Text style={styles.title}>Stats</Text>
-      <View style={{}}>
-        {pokemonData.stats.map((item, index) => {
-          return (
-            <View key={index}>
-              <Text>{item.stat.name}</Text>
-              <ProgressBar
-                style={{height: 20}}
-                progress={parseInt(item.base_stat) / 100}
-                color={colors[pokemonData.types[0].type.name]}
-              />
-            </View>
-          );
-        })}
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
