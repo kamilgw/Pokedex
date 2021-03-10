@@ -9,7 +9,7 @@ export function PokemonProvider({children}) {
   const [pokemons, setPokemons] = useState([]);
   const [pokemon, setPokemon] = useState({
     abilities: [],
-    markAs: 'none',
+    markAs: false,
   });
 
   async function listPokemon({offset}) {
@@ -27,8 +27,8 @@ export function PokemonProvider({children}) {
     const results = await getPokemonById(id);
     const markAs = await getMarkPokemon(id);
 
-    setMarkedAs(markAs ?? 'none');
-    setPokemon({...results, markAs: markAs ?? 'none'});
+    setMarkedAs(markAs ?? false);
+    setPokemon({...results, markAs: markAs ?? false});
   }
 
   async function getMarkPokemon(id) {

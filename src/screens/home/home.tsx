@@ -80,7 +80,6 @@ const Pokemons = () => {
           onRefresh={refreshPokemons}
           ListFooterComponent={renderFooter()}
           showsVerticalScrollIndicator={false}
-
         />
       </View>
     </SafeAreaView>
