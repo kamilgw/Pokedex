@@ -1,4 +1,6 @@
 import axios from 'axios';
+import Pokemon from '../types/pokemon';
+import PokemonSpecie from '../types/pokemonSpecies';
 
 const api = axios.create();
 
@@ -25,9 +27,8 @@ export async function getAllPokemons({offset, amount = 14}) {
   return {data};
 }
 
-export async function getPokemonById(id) {
+export const getPokemonById = async (id: string) => {
   const {data} = await api.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-
   return {
     ...data,
     type: data.types[0].type.name,
@@ -42,5 +43,5 @@ export async function getPokemonById(id) {
       speed: data.stats[5].base_stat,
     },
   };
-}
+};
 export default api;
