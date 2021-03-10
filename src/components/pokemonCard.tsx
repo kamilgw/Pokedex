@@ -3,11 +3,10 @@ import {View, Text, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import TypeCard from './typeCard';
 import getColorFromType from '../utilities/getColorFromType';
-export interface Props {
-  name: string;
-  url: string;
-}
+
 const PokemonCard = ({pokemon}) => {
+  const pokeball = require('../assets/pokeball.png');
+
   return (
     <View
       style={[
@@ -18,7 +17,12 @@ const PokemonCard = ({pokemon}) => {
       <TypeCard type={pokemon.type} />
       <View style={styles.pokemonImageContainer}>
         <FastImage
-          style={{width: 60, height: 60}}
+          style={styles.pokeball}
+          tintColor={'#fff'}
+          source={pokeball}
+        />
+        <FastImage
+          style={{width: 80, height: 80}}
           source={{
             uri:
               'https://raw.githubusercontent.com/' +
@@ -40,22 +44,35 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 3,
     borderColor: '#fff',
-    paddingHorizontal: 6,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    overflow: 'hidden',
   },
   info: {
     flex: 1,
     flexDirection: 'row',
   },
   pokemonName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
     color: 'white',
   },
+  pokeball: {
+    opacity: 0.15,
+    width: 90,
+    height: 90,
+    position: 'absolute',
+    right: -8,
+    bottom: -15,
+    tintColor: '#2d3436',
+  },
   pokemonImageContainer: {
     flex: 1,
-    alignItems: 'flex-end',
+    // alignItems: 'flex-end',
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
   },
   types: {
     flexDirection: 'column',

@@ -21,6 +21,22 @@ interface Type {
   };
 }
 
+interface Move {
+  move: {
+    name: string;
+    url: string;
+  };
+}
+
+interface Ability {
+  ability: {
+    name: string;
+    url: string;
+  };
+  is_hidden: boolean;
+  slot: number;
+}
+
 interface Pokemon {
   id: string;
   name: string;
@@ -31,5 +47,7 @@ interface Pokemon {
   num: string;
   stats: Array<Stats>;
   types: Array<Type>;
+  moves: Array<Move>;
+  abilities: Array<Ability>;
 }
 export default Pokemon;
