@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import TabBar from '../../components/tabBar';
@@ -38,6 +37,7 @@ const Details = () => {
       ]}>
       <View style={styles.header}>
         <SafeAreaView style={styles.container}>
+          <View style={styles.roundSquare} />
           <View style={styles.headerShow}>
             <TouchableOpacity style={styles.backContainer} onPress={goBack}>
               <Icon name="arrow-left" size={30} color="white" />
@@ -51,7 +51,9 @@ const Details = () => {
 
           <View style={styles.headerShow}>
             <View style={styles.nameContainer}>
-              <Text style={styles.name}>{pokemon.name}</Text>
+              <Text style={styles.name}>
+                {capitalizeFirstLetter(pokemon.name)}
+              </Text>
               <View style={styles.types}>
                 <TypeCard type={pokemon.type} />
               </View>
@@ -78,7 +80,9 @@ const Details = () => {
         </SafeAreaView>
       </View>
       <View style={styles.main} />
-      <TabBar style={styles.nav} pokemonData={pokemon} />
+      <View style={{paddingHorizontal: 20, flex: 1, backgroundColor: '#fff'}}>
+        <TabBar style={styles.nav} pokemonData={pokemon} />
+      </View>
     </View>
   ) : (
     <View style={styles.indicator}>
@@ -164,5 +168,16 @@ const styles = StyleSheet.create({
     opacity: 0.2,
     bottom: -20,
     right: -30,
+  },
+  roundSquare: {
+    width: 212,
+    height: 212,
+    borderRadius: 24,
+    position: 'absolute',
+    top: -95,
+    left: -110,
+    backgroundColor: '#fff',
+    opacity: 0.1,
+    transform: [{rotate: '-13deg'}],
   },
 });

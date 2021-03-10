@@ -28,20 +28,38 @@ export async function getAllPokemons({offset, amount = 14}) {
 }
 
 export const getPokemonById = async (id: string) => {
-  const {data} = await api.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const {data: pokemonData} = await api.get<Pokemon>(
+    `https://pokeapi.co/api/v2/pokemon/${id}`,
+  );
+  const pokemonStatsFormatted = pokemonData.stats.map((stat) => {
+    let name = '';
+
+    if (stat.stat.name === 'hp') {
+      name = 'HP';
+    } else if (stat.stat.name === 'attack') {
+      name = 'Attack';
+    } else if (stat.stat.name === 'defense') {
+      name = 'Defense';
+    } else if (stat.stat.name === 'special-attack') {
+      name = 'Sp. Atk';
+    } else if (stat.stat.name === 'special-defense') {
+      name = 'Sp. Def';
+    } else if (stat.stat.name === 'speed') {
+      name = 'Speed';
+    }
+
+    return {
+      base_stat: stat.base_stat,
+      name,
+      url: stat.stat.url,
+    };
+  });
   return {
-    ...data,
-    type: data.types[0].type.name,
-    height: data.height,
-    weight: data.weight,
-    stats: {
-      hp: data.stats[0].base_stat,
-      attack: data.stats[1].base_stat,
-      defense: data.stats[2].base_stat,
-      specialAttack: data.stats[3].base_stat,
-      specialDefense: data.stats[4].base_stat,
-      speed: data.stats[5].base_stat,
-    },
+    ...pokemonData,
+    type: pokemonData.types[0].type.name,
+    height: pokemonData.height,
+    weight: pokemonData.weight,
+    stats: pokemonStatsFormatted,
   };
 };
 export default api;

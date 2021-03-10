@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
 import getColorFromType from '../../utilities/getColorFromType';
 import capitalizeFirstLetter from '../../utilities/capitalizeFirstLetter';
-
+import BaseStats from './baseStats';
 export interface Props {
   pokemonData: Pokemon;
 }
@@ -32,44 +32,7 @@ const About = ({pokemonData}) => {
           </View>
         </View>
         <Text style={styles.title}>Stats</Text>
-        <View style={{}}>
-          <Text>Hp</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.hp / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-          <Text>Attack</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.attack / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-          <Text>Defense</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.defense / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-          <Text>Special-attack</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.specialAttack / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-          <Text>Special-defense</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.specialDefense / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-          <Text>Speed</Text>
-          <ProgressBar
-            style={{height: 20}}
-            progress={pokemonData?.stats?.speed / 100}
-            color={getColorFromType(capitalizeFirstLetter(pokemonData.type))}
-          />
-        </View>
+        <BaseStats pokemon={pokemonData} />
       </View>
     </ScrollView>
   );
@@ -97,6 +60,15 @@ const styles = StyleSheet.create({
     color: '#303943',
     lineHeight: 42,
     fontWeight: 'bold',
+  },
+  stat: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  progressBar: {
+    height: 4,
+    backgroundColor: '#4C91B2',
   },
   viewHeightWeight: {
     flexDirection: 'row',
