@@ -12,15 +12,15 @@ import 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import TabBar from '../../components/tabBar';
 import TypeCard from '../../components/typeCard';
-import {usePokemon, useMark} from '../../contexts';
+import {usePokemon} from '../../contexts';
 import {useNavigation} from '@react-navigation/native';
 import getColorFromType from '../../utilities/getColorFromType';
 import capitalizeFirstLetter from '../../utilities/capitalizeFirstLetter';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FavoriteButton from '../../components/favoriteButton';
 
 const Details = () => {
   const {goBack} = useNavigation();
-  const {showMark} = useMark();
   const {pokemon, markedAs} = usePokemon();
 
   const pokeball = require('../../assets/pokeball.png');
@@ -42,11 +42,11 @@ const Details = () => {
             <TouchableOpacity style={styles.backContainer} onPress={goBack}>
               <Icon name="arrow-left" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.heartContainer} onPress={showMark}>
-              <View style={styles.heartIconContainer}>
-                <Icon name="heart-outline" size={30} color="white" />
-              </View>
-            </TouchableOpacity>
+            <FavoriteButton
+              id={pokemon.id}
+              name={pokemon.name}
+              type={capitalizeFirstLetter(pokemon.type)}
+            />
           </View>
 
           <View style={styles.headerShow}>

@@ -12,11 +12,9 @@ export default function App() {
 
   return (
     <PokemonProvider>
-    <MarkProvider>
       <NavigationContainer>
         <Routes />
       </NavigationContainer>
-      </MarkProvider>
     </PokemonProvider>
   );
 }

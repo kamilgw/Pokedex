@@ -1,54 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {usePokemon, useMark} from '../../contexts';
-import {saveDataPokedex} from '../../utils';
-import {Modal} from 'react-native';
-import colors from '../../styles/colors';
-import styles from './styles';
+import {usePokemon} from '../contexts';
+import {saveDataPokedex} from '../store/asyncStorage';
+import {TouchableOpacity, View, StyleSheet} from 'react-native';
 
-export default ({id, name, image}) => {
-  const {closeMark, mark} = useMark();
+const FavoriteButton = ({id, name, type}) => {
   const {setMarkedAs} = usePokemon();
+  const [isMarked, setIsMarked] = useState(true);
+  const buttonHandler = () => {
+    markPokemonAs(isMarked);
+    setIsMarked(current => !current);
+  };
 
   async function markPokemonAs(markAs) {
-    await saveDataPokedex({id, name, image, markAs});
+    await saveDataPokedex({id, type, name, markAs});
     setMarkedAs(markAs);
-    closeMark();
   }
 
   return (
-    <Modal transparent={true} visible={mark.enable}>
-      <styles.MarkScreen>
-        <styles.MarkContainer>
-          <styles.MarkHeader>
-            <styles.CloseButton onPress={closeMark}>
-              <Icon name="close-circle-outline" size={36} color={colors.dark} />
-            </styles.CloseButton>
-          </styles.MarkHeader>
-
-          <styles.BodyContainer>
-            <styles.ItemBody onPress={() => markPokemonAs('none')}>
-              <Icon
-                name="heart-outline"
-                style={{marginRight: 30}}
-                size={36}
-                color={colors.dark}
-              />
-              <styles.ItemText>None</styles.ItemText>
-            </styles.ItemBody>
-
-            <styles.ItemBody onPress={() => markPokemonAs('captured')}>
-              <Icon
-                name="heart"
-                style={{marginRight: 30}}
-                size={36}
-                color={colors.dark}
-              />
-              <styles.ItemText>Captured</styles.ItemText>
-            </styles.ItemBody>
-          </styles.BodyContainer>
-        </styles.MarkContainer>
-      </styles.MarkScreen>
-    </Modal>
+    <TouchableOpacity
+      style={styles.heartContainer}
+      onPress={() => buttonHandler()}>
+      <View style={styles.heartIconContainer}>
+        <Icon name="heart-outline" size={30} color="white" />
+      </View>
+    </TouchableOpacity>
   );
 };
+export default FavoriteButton;
+
+const styles = StyleSheet.create({
+  heartContainer: {
+    alignItems: 'center',
+    height: '100%',
+  },
+  heartIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginRight: 20,
+  },
+});

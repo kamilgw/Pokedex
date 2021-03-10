@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, SafeAreaView} from 'react-native';
 import {loadPokemonsCaptured} from '../../store/asyncStorage';
 import {usePokemon} from '../../contexts';
 import PokemonCard from '../../components/pokemonCard';
@@ -11,7 +11,7 @@ const Pokedex = () => {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonsFiltered, setPokemonFiltered] = useState([]);
   const [searching, setSearch] = useState(false);
-  const {listPokemonById, searckPokemon} = usePokemon();
+  const {listPokemonById, searchPokemon} = usePokemon();
 
   async function loadPokedex() {
     setPokemons(await loadPokemonsCaptured());
@@ -19,12 +19,12 @@ const Pokedex = () => {
 
   async function goToPageShow(id) {
     await listPokemonById(id);
-    navigate('Show');
+    navigate('Details');
   }
 
   function filterPokemonByName(value) {
     setSearch(true);
-    setPokemonFiltered(searckPokemon(pokemons, value));
+    setPokemonFiltered(searchPokemon(pokemons, value));
   }
 
   useFocusEffect(
@@ -33,28 +33,24 @@ const Pokedex = () => {
     }, []),
   );
   return (
-    <View style={styles.container}>
-      <Text style={styles.titlePokedex}>My Pokedex</Text>
-
-      {/* <styles.InputSearchContainer>
-        <styles.InputSearch
-          onChangeText={filterPokemonByName}
-          placeholder="Filter pokemon"
+    <SafeAreaView>
+      <View style={styles.pokemonlist}>
+        <Text style={styles.titlePokedex}>My Pokedex</Text>
+        <FlatList
+          style={{marginLeft: 30}}
+          data={searching ? pokemonsFiltered : pokemons}
+          numColumns={2}
+          onEndReachedThreshold={0.1}
+          keyExtractor={(item) => item.name}
+          renderItem={({item}) => (
+            <RectButton onPress={() => goToPageShow(item.id)}>
+              <PokemonCard pokemon={item} />
+            </RectButton>
+          )}
+          showsVerticalScrollIndicator={false}
         />
-      </styles.InputSearchContainer> */}
-
-      <FlatList
-        data={searching ? pokemonsFiltered : pokemons}
-        renderItem={({item}) => (
-          <RectButton onPress={() => goToPageShow(item.id)}>
-            <PokemonCard pokemon={item} />
-          </RectButton>
-        )}
-        keyExtractor={(item) => item.name}
-        numColumns="2"
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -62,12 +58,17 @@ export default Pokedex;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 40,
+  },
+
+  pokemonList: {
     flex: 1,
-    paddingHorizontal: 0,
-    paddingVertical: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   titlePokedex: {
     fontSize: 22,
     marginBottom: 15,
+    marginLeft: 40,
   },
 });

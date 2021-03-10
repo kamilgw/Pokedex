@@ -27,7 +27,7 @@ function filterById(array, id) {
 }
 
 function filterByCaptured(array) {
-  return array.filter((pokemon) => pokemon?.markAs === 'captured');
+  return array.filter((pokemon) => pokemon?.markAs === true);
 }
 
 async function saveInStorage(key, data) {
@@ -59,7 +59,7 @@ export async function chekMarkedAs(id) {
 
   if (!pokedexStorage) {
     return {
-      markAs: 'none',
+      markAs: false,
     };
   }
 
