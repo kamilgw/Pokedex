@@ -11,7 +11,7 @@ export interface Props {
 
 const About = ({pokemonData}) => {
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         {/* <Text style={styles.description}>
           <Text style={styles.description}>
@@ -77,6 +77,9 @@ const About = ({pokemonData}) => {
 
 export default About;
 const styles = StyleSheet.create({
+  scrollContainer: {
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     width: 410,

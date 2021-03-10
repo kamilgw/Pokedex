@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import 'react-native-gesture-handler';
@@ -24,32 +25,40 @@ const Details = () => {
   const {pokemon, markedAs} = usePokemon();
 
   const pokeball = require('../../assets/pokeball.png');
-  const Tab = createMaterialTopTabNavigator();
 
   return pokemon.name ? (
-    <View style={styles.container}>
-      <SafeAreaView
-        style={{
-          ...styles.header,
+    <View
+      style={[
+        styles.container,
+        {
           backgroundColor: getColorFromType(
             capitalizeFirstLetter(pokemon.type),
           ),
-        }}>
-        <View style={styles.headerShow}>
-          <TouchableOpacity style={styles.backContainer} onPress={goBack}>
-            <Icon name="arrow-left" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.heartContainer} onPress={showMark}>
-            <View style={styles.heartIconContainer}>
-              <Icon name="heart-outline" size={30} color="white" />
+        },
+      ]}>
+      <View style={styles.header}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.headerShow}>
+            <TouchableOpacity style={styles.backContainer} onPress={goBack}>
+              <Icon name="arrow-left" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.heartContainer} onPress={showMark}>
+              <View style={styles.heartIconContainer}>
+                <Icon name="heart-outline" size={30} color="white" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.headerShow}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.name}>{pokemon.name}</Text>
+              <View style={styles.types}>
+                <TypeCard type={pokemon.type} />
+              </View>
             </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.info}>
-          <Text style={styles.name}>{pokemon.name}</Text>
-          <Text style={styles.id}>#{String(pokemon.id).padStart(3, '0')}</Text>
-          <View style={styles.types}>
-            <TypeCard type={pokemon.type} />
+            <Text style={styles.id}>
+              #{String(pokemon.id).padStart(3, '0')}
+            </Text>
           </View>
           <View style={styles.teste}>
             <FastImage
@@ -60,13 +69,16 @@ const Details = () => {
                 ).padStart(3, '0')}.png`,
               }}
             />
-            <FastImage style={styles.pokeballPos} source={pokeball} />
+            <FastImage
+              tintColor={'#fff'}
+              style={styles.pokeballPos}
+              source={pokeball}
+            />
           </View>
-        </View>
-      </SafeAreaView>
-      <View style={styles.main}>
-        <TabBar pokemonData={pokemon} />
+        </SafeAreaView>
       </View>
+      <View style={styles.main} />
+      <TabBar style={styles.nav} pokemonData={pokemon} />
     </View>
   ) : (
     <View style={styles.indicator}>
@@ -78,6 +90,9 @@ const Details = () => {
 export default Details;
 
 const styles = StyleSheet.create({
+  header: {
+    height: Dimensions.get('screen').height * 0.425,
+  },
   headerShow: {
     height: 50,
     flexDirection: 'row',
@@ -85,11 +100,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginLeft: 15,
   },
-  header: {
-    height: 400,
+  nameContainer: {
+    flexDirection: 'column',
   },
   heartContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     height: '100%',
   },
@@ -103,8 +117,10 @@ const styles = StyleSheet.create({
   },
   id: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
+    justifyContent: 'flex-end',
+    marginRight: 20,
   },
   types: {
     flexDirection: 'column',
@@ -118,27 +134,35 @@ const styles = StyleSheet.create({
     lineHeight: 42,
     fontWeight: 'bold',
   },
-  info: {
-    marginLeft: 15,
-    height: '100%',
-  },
   image: {
     height: 220,
     width: 220,
+    zIndex: 1,
+    bottom: -30,
   },
   teste: {
     flex: 1,
     alignItems: 'center',
   },
   main: {
-    flex: 1,
+    height: 20,
     backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    zIndex: -1,
+  },
+  nav: {
+    paddingHorizontal: 0,
+    paddingVertical: 20,
+    borderRadius: 20,
   },
   pokeballPos: {
     width: 200,
     height: 200,
     position: 'absolute',
     zIndex: -1,
-    opacity: 0.07,
+    opacity: 0.2,
+    bottom: -20,
+    right: -30,
   },
 });

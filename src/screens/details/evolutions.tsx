@@ -98,7 +98,7 @@ const Evolutions = ({pokemonID}: Props) => {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
         {evolutions?.map((data, index) => (
           <View style={styles.evolution} key={index}>
@@ -138,7 +138,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 30,
   },
-
+  scrollContainer: {
+    backgroundColor: '#fff',
+  },
   evolution: {
     alignItems: 'center',
     marginBottom: 15,
